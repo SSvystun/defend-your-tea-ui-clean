@@ -95,33 +95,54 @@ export default function DefendYourTea() {
 
   return (
     <div className="p-6 max-w-xl mx-auto space-y-4">
-      <h1 className="text-3xl font-bold">Defend Your Tea 🍵🛡️</h1>
-      {error && <div className="text-red-500">{error}</div>}
+      <h1 className="text-3xl font-bold text-center text-blue-600 mb-6 animate__animated animate__fadeIn">Defend Your Tea 🍵🛡️</h1>
+      
+      {error && (
+        <div className="text-red-500 animate__animated animate__fadeIn">
+          {error}
+        </div>
+      )}
+
       {!address ? (
-        <button onClick={connect} className="bg-blue-600 text-white px-4 py-2 rounded">
+        <button
+          onClick={connect}
+          className="bg-blue-600 text-white px-4 py-2 rounded-full w-full shadow-md transform transition duration-300 hover:scale-105 hover:bg-blue-500 hover:shadow-lg"
+        >
           Connect Wallet
         </button>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-4">
           <div><strong>Address:</strong> {address}</div>
           <div><strong>Tea Defender Tokens:</strong> {balance} DYT</div>
           <div><strong>Tower Level:</strong> {level}</div>
           <div><strong>Unclaimed Rewards:</strong> {rewards} DYT</div>
 
           <div className="flex gap-2 pt-2">
-            <button onClick={() => call("upgradeTower")} className="bg-yellow-500 px-4 py-2 rounded text-white">
+            <button
+              onClick={() => call("upgradeTower")}
+              className="bg-yellow-500 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-yellow-400 hover:shadow-lg"
+            >
               Upgrade
             </button>
-            <button onClick={() => call("simulateAttack")} className="bg-red-600 px-4 py-2 rounded text-white">
+            <button
+              onClick={() => call("simulateAttack")}
+              className="bg-red-600 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-red-500 hover:shadow-lg"
+            >
               Attack
             </button>
-            <button onClick={() => call("claimRewards")} className="bg-green-600 px-4 py-2 rounded text-white">
+            <button
+              onClick={() => call("claimRewards")}
+              className="bg-green-600 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-green-500 hover:shadow-lg"
+            >
               Claim
             </button>
           </div>
 
           {/* Button to Disconnect Wallet */}
-          <button onClick={disconnect} className="bg-gray-600 text-white px-4 py-2 rounded mt-4">
+          <button
+            onClick={disconnect}
+            className="bg-gray-600 text-white px-4 py-2 rounded-full w-full mt-4 transform transition duration-300 hover:scale-105 hover:bg-gray-500 hover:shadow-lg"
+          >
             Disconnect Wallet
           </button>
         </div>
