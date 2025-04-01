@@ -84,6 +84,15 @@ export default function DefendYourTea() {
     await refresh(accounts[0], newSigner);
   };
 
+  const disconnect = () => {
+    setAddress("");
+    setSigner(null);
+    setBalance("0");
+    setLevel(0);
+    setRewards("0");
+    setError("");
+  };
+
   return (
     <div className="p-6 max-w-xl mx-auto space-y-4">
       <h1 className="text-3xl font-bold">Defend Your Tea 🍵🛡️</h1>
@@ -93,7 +102,7 @@ export default function DefendYourTea() {
           Connect Wallet
         </button>
       ) : (
-        <div>
+        <div className="space-y-2">
           <div><strong>Address:</strong> {address}</div>
           <div><strong>Tea Defender Tokens:</strong> {balance} DYT</div>
           <div><strong>Tower Level:</strong> {level}</div>
@@ -110,6 +119,11 @@ export default function DefendYourTea() {
               Claim
             </button>
           </div>
+
+          {/* Button to Disconnect Wallet */}
+          <button onClick={disconnect} className="bg-gray-600 text-white px-4 py-2 rounded mt-4">
+            Disconnect Wallet
+          </button>
         </div>
       )}
     </div>
