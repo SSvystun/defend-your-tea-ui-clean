@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import "./App.css"; // обов'язково підключи цей CSS у своєму проєкті
 
 const tokenAddress = "0x2AB54a9eA35b9c2ABcC6bBCcE34E25Cd1c784A9a";
 const gameAddress = "0xF9b7dD2B04C9872Ed37a1C347B334C62D1af0a14";
@@ -16,8 +17,7 @@ const abiGame = [
   "function claimRewards()"
 ];
 
-// Tea Sepolia Chain ID
-const expectedNetworkId = 10218;
+const expectedNetworkId = 10218; // Tea Sepolia
 
 const checkNetwork = async (provider) => {
   const network = await provider.getNetwork();
@@ -44,7 +44,7 @@ export default function DefendYourTea() {
           if (!isCorrectNetwork) {
             setError("Please connect to the Tea Sepolia testnet.");
           } else {
-            setError("");  // If the network is correct, remove error
+            setError("");
           }
           setAddress(accounts[0]);
         })
@@ -94,59 +94,35 @@ export default function DefendYourTea() {
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto space-y-4">
-      <h1 className="text-3xl font-bold text-center text-blue-600 mb-6 animate__animated animate__fadeIn">Defend Your Tea 🍵🛡️</h1>
-      
-      {error && (
-        <div className="text-red-500 animate__animated animate__fadeIn">
-          {error}
-        </div>
-      )}
+    <div className="game-container">
+      <div className="bg-arena"></div>
 
-      {!address ? (
-        <button
-          onClick={connect}
-          className="bg-blue-600 text-white px-4 py-2 rounded-full w-full shadow-md transform transition duration-300 hover:scale-105 hover:bg-blue-500 hover:shadow-lg"
-        >
-          Connect Wallet
-        </button>
-      ) : (
-        <div className="space-y-4">
-          <div><strong>Address:</strong> {address}</div>
-          <div><strong>Tea Defender Tokens:</strong> {balance} DYT</div>
-          <div><strong>Tower Level:</strong> {level}</div>
-          <div><strong>Unclaimed Rewards:</strong> {rewards} DYT</div>
+      <img src="/character.png" alt="Character" className="character" />
+      <img src="/tower.png" alt="Tower" className="tower" />
+      <img src="/monster.gif" alt="Monster" className="monster" />
 
-          <div className="flex gap-2 pt-2">
-            <button
-              onClick={() => call("upgradeTower")}
-              className="bg-yellow-500 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-yellow-400 hover:shadow-lg"
-            >
-              Upgrade
-            </button>
-            <button
-              onClick={() => call("simulateAttack")}
-              className="bg-red-600 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-red-500 hover:shadow-lg"
-            >
-              Attack
-            </button>
-            <button
-              onClick={() => call("claimRewards")}
-              className="bg-green-600 px-4 py-2 rounded text-white transform transition duration-300 hover:scale-105 hover:bg-green-500 hover:shadow-lg"
-            >
-              Claim
-            </button>
+      <div className="ui-panel">
+        <h1 className="title animate-fade">Defend Your Tea 🍵🛡️</h1>
+        {error && <div className="error-text animate-pulse">{error}</div>}
+        {!address ? (
+          <button onClick={connect} className="btn connect">Connect Wallet</button>
+        ) : (
+          <div className="info-panel">
+            <p><strong>Address:</strong> {address}</p>
+            <p><strong>Tokens:</strong> {balance} DYT</p>
+            <p><strong>Tower Level:</strong> {level}</p>
+            <p><strong>Unclaimed Rewards:</strong> {rewards} DYT</p>
+
+            <div className="actions">
+              <button onClick={() => call("upgradeTower")} className="btn yellow">Upgrade</button>
+              <button onClick={() => call("simulateAttack")} className="btn red">Attack</button>
+              <button onClick={() => call("claimRewards")} className="btn green">Claim</button>
+            </div>
+
+            <button onClick={disconnect} className="btn gray mt">Disconnect</button>
           </div>
-
-          {/* Button to Disconnect Wallet */}
-          <button
-            onClick={disconnect}
-            className="bg-gray-600 text-white px-4 py-2 rounded-full w-full mt-4 transform transition duration-300 hover:scale-105 hover:bg-gray-500 hover:shadow-lg"
-          >
-            Disconnect Wallet
-          </button>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
