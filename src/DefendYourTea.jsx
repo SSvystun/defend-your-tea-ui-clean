@@ -26,7 +26,7 @@ export default function DefendYourTea() {
   const [rewards, setRewards] = useState("0");
 
   useEffect(() => {
-    if (window.ethereum) {
+    if (typeof window.ethereum !== "undefined") {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
       setProvider(newProvider);
     }
@@ -63,7 +63,9 @@ export default function DefendYourTea() {
     <div className="p-6 max-w-xl mx-auto space-y-4">
       <h1 className="text-3xl font-bold">Defend Your Tea 🍵🛡️</h1>
       {!address ? (
-        <button onClick={connect} className="bg-blue-600 text-white px-4 py-2 rounded">Connect Wallet</button>
+        <button onClick={connect} className="bg-blue-600 text-white px-4 py-2 rounded">
+          Connect Wallet
+        </button>
       ) : (
         <div className="space-y-2">
           <div><strong>Address:</strong> {address}</div>
@@ -72,9 +74,15 @@ export default function DefendYourTea() {
           <div><strong>Unclaimed Rewards:</strong> {rewards} DYT</div>
 
           <div className="flex gap-2 pt-2">
-            <button onClick={() => call("upgradeTower")} className="bg-yellow-500 px-4 py-2 rounded text-white">Upgrade</button>
-            <button onClick={() => call("simulateAttack")} className="bg-red-600 px-4 py-2 rounded text-white">Attack</button>
-            <button onClick={() => call("claimRewards")} className="bg-green-600 px-4 py-2 rounded text-white">Claim</button>
+            <button onClick={() => call("upgradeTower")} className="bg-yellow-500 px-4 py-2 rounded text-white">
+              Upgrade
+            </button>
+            <button onClick={() => call("simulateAttack")} className="bg-red-600 px-4 py-2 rounded text-white">
+              Attack
+            </button>
+            <button onClick={() => call("claimRewards")} className="bg-green-600 px-4 py-2 rounded text-white">
+              Claim
+            </button>
           </div>
         </div>
       )}
