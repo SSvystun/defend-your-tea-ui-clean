@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 const tokenAddress = "0x2AB54a9eA35b9c2ABcC6bBCcE34E25Cd1c784A9a";
@@ -17,6 +16,14 @@ const abiGame = [
   "function claimRewards()"
 ];
 
+// Tea Sepolia Chain ID
+const expectedNetworkId = 10218;
+
+const checkNetwork = async (provider) => {
+  const network = await provider.getNetwork();
+  return network.chainId === expectedNetworkId;
+};
+
 export default function DefendYourTea() {
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState();
@@ -24,22 +31,31 @@ export default function DefendYourTea() {
   const [balance, setBalance] = useState("0");
   const [level, setLevel] = useState(0);
   const [rewards, setRewards] = useState("0");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
       const newProvider = new ethers.providers.Web3Provider(window.ethereum);
       setProvider(newProvider);
+
+      newProvider.send("eth_requestAccounts", [])
+        .then(async (accounts) => {
+          const isCorrectNetwork = await checkNetwork(newProvider);
+          if (!isCorrectNetwork) {
+            setError("Please connect to the Tea Sepolia testnet.");
+          } else {
+            setError("");  // If the network is correct, remove error
+          }
+          setAddress(accounts[0]);
+        })
+        .catch((err) => {
+          console.error("Error requesting accounts:", err);
+          setError("Please install MetaMask.");
+        });
+    } else {
+      setError("Please install MetaMask.");
     }
   }, []);
-
-  const connect = async () => {
-    if (!provider) return;
-    const accounts = await provider.send("eth_requestAccounts", []);
-    const newSigner = provider.getSigner();
-    setSigner(newSigner);
-    setAddress(accounts[0]);
-    await refresh(accounts[0], newSigner);
-  };
 
   const refresh = async (addr, sg) => {
     const token = new ethers.Contract(tokenAddress, abiToken, provider);
@@ -59,15 +75,25 @@ export default function DefendYourTea() {
     await refresh(address, signer);
   };
 
+  const connect = async () => {
+    if (!provider) return;
+    const accounts = await provider.send("eth_requestAccounts", []);
+    const newSigner = provider.getSigner();
+    setSigner(newSigner);
+    setAddress(accounts[0]);
+    await refresh(accounts[0], newSigner);
+  };
+
   return (
     <div className="p-6 max-w-xl mx-auto space-y-4">
       <h1 className="text-3xl font-bold">Defend Your Tea 🍵🛡️</h1>
+      {error && <div className="text-red-500">{error}</div>}
       {!address ? (
         <button onClick={connect} className="bg-blue-600 text-white px-4 py-2 rounded">
           Connect Wallet
         </button>
       ) : (
-        <div className="space-y-2">
+        <div>
           <div><strong>Address:</strong> {address}</div>
           <div><strong>Tea Defender Tokens:</strong> {balance} DYT</div>
           <div><strong>Tower Level:</strong> {level}</div>
